@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="KeepaliveService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="KeepaliveService.cs.codefirst" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="protobuf-net" Version="3.0.52" />
+    <PackageReference Include="protobuf-net.Grpc" Version="1.0.123" />
+  </ItemGroup>
+
+</Project>

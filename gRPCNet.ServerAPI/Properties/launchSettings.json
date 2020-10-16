@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "gRPCNet.ServerAPI": {
+      "commandName": "Project",
+      "commandLineArgs": "--console",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  } 
+}

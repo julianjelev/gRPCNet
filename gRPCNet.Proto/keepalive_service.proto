@@ -1,0 +1,23 @@
+﻿//1. Syntax
+syntax = "proto3";
+
+//2. Package
+package grpcnet.proto;
+
+//3. Imports (sorted)
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+//4. File options
+option csharp_namespace = "gRPCNet.Proto";
+
+//use CamelCase (with an initial capital) for both the service name and any RPC method names
+service KeepaliveService {
+  rpc Subscribe (google.protobuf.Empty) returns (stream KeepaliveResult);
+}
+
+//Use CamelCase (with an initial capital) for message names
+message KeepaliveResult {
+  google.protobuf.Timestamp time = 1;//Use underscore_separated_names for field names (including oneof field and extension names) 
+  string client = 2;
+}

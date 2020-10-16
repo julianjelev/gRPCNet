@@ -1,0 +1,20 @@
+A basic tutorial introduction to gRPC in C#.
+https://grpc.io/docs/languages/csharp/basics/
+
+Protocol Buffers Language Guide
+https://developers.google.com/protocol-buffers/docs/overview
+
+Introduction to gRPC on .NET Core
+https://docs.microsoft.com/en-us/aspnet/core/grpc/?view=aspnetcore-3.1
+
+grpc-dotnet/examples/
+https://github.com/grpc/grpc-dotnet/tree/master/examples
+
+protobuf-net.Grpc
+https://protobuf-net.github.io/protobuf-net.Grpc/
+
+Protobuf Code Generator and Parser protobufnet Marc Gravell
+https://protogen.marcgravell.com/
+
+gRPC Server Reflection in the .NET world
+https://martinbjorkstrom.com/posts/2020-07-08-grpc-reflection-in-net

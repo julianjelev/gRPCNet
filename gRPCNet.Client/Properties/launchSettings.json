@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "gRPCNet.Client": {
+      "commandName": "Project",
+      "commandLineArgs": "--console"
+    }
+  }
+}

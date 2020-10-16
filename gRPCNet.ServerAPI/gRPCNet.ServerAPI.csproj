@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
+    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CustomWebHostService.cs" />
+    <Compile Remove="Extensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="3.1.8" />
+    <PackageReference Include="protobuf-net.Grpc.AspNetCore" Version="1.0.123" />
+    <PackageReference Include="protobuf-net.Grpc.AspNetCore.Reflection" Version="1.0.123" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\gRPCNet.Proto\gRPCNet.Proto.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="grpcserver.wdev.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

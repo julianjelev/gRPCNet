@@ -1,0 +1,20 @@
+﻿// да се използва при оторизиране с клиентски сертификат
+{
+  "HttpsCertificateSettings": {
+    "HttpsInlineCertFileEnabled": true, // set false on production
+    "HttpsInlineCertFile": {
+      "Certificate": {
+        "Path": "grpcclient.wdev.pfx",
+        "Password": "12345"
+      }
+    },
+    "HttpsInlineCertStoreEnabled": false, // set true on production
+    "HttpsInlineCertStore": {
+      "Certificate": {
+        "Store": "My",
+        "Location": "LocalMachine",
+        "ThumbPrint": "4A95C66AE1D5D43EE296BB4272BBA5B90DF5C291"// replace with actual value
+      }
+    }
+  }
+}
