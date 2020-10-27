@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using gRPCNet.Client.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -41,13 +42,16 @@ namespace gRPCNet.Client
                     })
                     .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Information);
 
+                    // register FileLogger service
                     services.AddTransient<IFileLogger>(s => new FileLogger(hostContext.Configuration, pathToContentRoot));
+
+                    // register application services
+                    services.AddScoped<ISocketMessageService, SocketMessageService>();
+
                     services.AddSingleton<GrpcChannelService>();
                     services.AddHostedService<KeepaliveHostedService>();
-
-                    //services.AddScoped<IServices, Services>();
                     //// IMPORTANT! Register our application entry point
-                    //services.AddHostedService<TcpServer>();
+                    services.AddHostedService<TcpHostedService>();
                 })
                 .UseEnvironment(isService ? Environments.Production : Environments.Development);
 
