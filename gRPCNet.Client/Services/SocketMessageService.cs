@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 
 namespace gRPCNet.Client.Services
 {
@@ -17,6 +18,8 @@ namespace gRPCNet.Client.Services
 
         public byte[] ProccessRequest(byte[] message)
         {
+            Thread.Sleep(1000);//work
+            //return message;
             return message.Reverse().ToArray();
         }
     }

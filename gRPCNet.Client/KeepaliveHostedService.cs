@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using ProtoBuf.Grpc;
 using ProtoBuf.Grpc.Client;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +17,6 @@ namespace gRPCNet.Client
         private readonly ILogger<KeepaliveHostedService> _logger;
         private readonly IFileLogger _fileLogger;
 
-        private CancellationTokenSource _cancellationTokenSource;
         private Proto.IKeepaliveService _keepaliveService;
 
         public KeepaliveHostedService(
@@ -29,7 +29,6 @@ namespace gRPCNet.Client
             _appLifetime = appLifetime;
             _logger = logger;
             _fileLogger = fileLogger;
-            _cancellationTokenSource = new CancellationTokenSource();
             _keepaliveService = _chanelService.Channel.CreateGrpcService<Proto.IKeepaliveService>();
         }
 
@@ -40,9 +39,9 @@ namespace gRPCNet.Client
         /// <returns>Task</returns>
         public Task StartAsync(CancellationToken token)
         {
-            _appLifetime.ApplicationStarted.Register(OnStarted);
-            _appLifetime.ApplicationStopping.Register(OnStopping);
-            _appLifetime.ApplicationStopped.Register(OnStopped);
+            _appLifetime.ApplicationStarted.Register(OnStarted, true);
+            _appLifetime.ApplicationStopping.Register(OnStopping, true);
+            _appLifetime.ApplicationStopped.Register(OnStopped, true);
 
             return Task.CompletedTask;
         }
@@ -64,39 +63,58 @@ namespace gRPCNet.Client
         //
         private void OnStarted() 
         {
-            _logger.LogInformation("KeepaliveHostedService STARTED");
-            _fileLogger.WriteProgramLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService STARTED");
             // Perform post - startup activities here
             Task.Run(async () => 
             {
+                _logger.LogInformation("KeepaliveHostedService STARTED");
+                _fileLogger.WriteProgramLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService STARTED");
                 try
                 {
-                    var options = new CallOptions(cancellationToken: _cancellationTokenSource.Token);
-                    await foreach (var tic in _keepaliveService.SubscribeAsync(new CallContext(options))) 
+                    var cc = new CallContext(new CallOptions(cancellationToken: _appLifetime.ApplicationStopping));
+                    await foreach (var tic in _keepaliveService.SubscribeAsync(cc))
                     {
                         _logger.LogInformation($"{tic.Time} server respond for client {tic.Client}");
                     }
                 }
-                catch (RpcException ex) 
+                catch (Exception ex) 
                 {
-                    _logger.LogError($"KeepaliveHostedService->OnStarted->RpcException: {ex}");
-                    _fileLogger.WriteErrorLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService->OnStarted->RpcException: {ex}");
+                    _logger.LogError($"KeepaliveHostedService->OnStarted->Exception: {ex}");
+                    _fileLogger.WriteErrorLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService->OnStarted->Exception: {ex}");
+                    _chanelService.Channel.Dispose();
                 }
-            });
+            }, _appLifetime.ApplicationStopping);
         }
 
         private void OnStopping() 
         {
             // Perform on-stopping activities here
-            _logger.LogInformation("KeepaliveHostedService STOPPING");
-            _cancellationTokenSource.Cancel();
+            Task.Run(() => 
+            {
+                try
+                {
+                    _chanelService.Channel.ShutdownAsync().Wait();
+                    _logger.LogInformation("KeepaliveHostedService STOPPING");
+                    _fileLogger.WriteProgramLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService STOPPING");
+                }
+                catch (Exception e)
+                {
+                    if (e is ObjectDisposedException || e is AggregateException)
+                    {
+                        _logger.LogError($"ERROR KeepaliveHostedService->OnStopping->Exception: {e}");
+                        _fileLogger.WriteErrorLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} ERROR KeepaliveHostedService->OnStopping->Exception: {e}");
+                    }
+                }
+            });
         }
 
         private void OnStopped() 
         {
-            _logger.LogInformation("KeepaliveHostedService STOPED");
-            _fileLogger.WriteProgramLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService STOPED");
             // Perform post-stopped activities here
+            Task.Run(() => 
+            {
+                _logger.LogInformation("KeepaliveHostedService STOPED");
+                _fileLogger.WriteProgramLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService STOPED");
+            });
         }
     }
 }

@@ -34,6 +34,7 @@ namespace gRPCNet.Client
                         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                         .AddJsonFile("certificate.json", optional: true, reloadOnChange: true);
                 })
+                .ConfigureHostConfiguration(config => { })
                 .ConfigureServices((hostContext, services) => 
                 {
                     services.AddLogging(logging =>
@@ -46,12 +47,13 @@ namespace gRPCNet.Client
                     services.AddTransient<IFileLogger>(s => new FileLogger(hostContext.Configuration, pathToContentRoot));
 
                     // register application services
-                    services.AddScoped<ISocketMessageService, SocketMessageService>();
-
+                    services.AddTransient<ISocketMessageService, SocketMessageService>();
                     services.AddSingleton<GrpcChannelService>();
-                    services.AddHostedService<KeepaliveHostedService>();
-                    //// IMPORTANT! Register our application entry point
+
                     services.AddHostedService<TcpHostedService>();
+                    services.AddHostedService<KeepaliveHostedService>();
+
+                    services.Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(15));
                 })
                 .UseEnvironment(isService ? Environments.Production : Environments.Development);
 
