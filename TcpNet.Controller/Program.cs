@@ -14,14 +14,14 @@ namespace TcpNet.Controller
     {
         static void Main(string[] args)
         {
-            List<Controller> controllers = null;
+            List<Models.Controller> controllers = null;
 
             using (StreamReader sr = new StreamReader("../../../controllers.json")) 
             {
                 string json = sr.ReadToEnd();
                 try
                 {
-                    controllers = JsonConvert.DeserializeObject<List<Controller>>(json);
+                    controllers = JsonConvert.DeserializeObject<List<Models.Controller>>(json);
                 }
                 catch (JsonException ex)
                 {
@@ -37,121 +37,53 @@ namespace TcpNet.Controller
             }
 
             Console.WriteLine("Type Enter to start messaging ...");
+            // blocking current thread
             Console.ReadLine();
 
+            
+
+            CancellationTokenSource cts = new CancellationTokenSource();
             foreach (var controller in controllers) 
             {
                 new Thread(() => 
                 {
                     Thread.CurrentThread.IsBackground = true;
-                    controller.VerifyCards();
+                    controller.VerifyCards(cts.Token);
                 }).Start();
             }
 
-            // blocking current thread
             Console.WriteLine("Type Enter to terminate the program");
+            // blocking current thread
             Console.ReadLine();
+            // Request cancellation.
+            cts.Cancel();
+            Console.WriteLine("Cancellation set in token source... Please Wait 5 sec");
+            Thread.Sleep(5000);
+            // Cancellation should have happened, so call Dispose.
+            cts.Dispose();
+            Console.WriteLine("Progam is terminated");
         }   
-    }
-
-    public class Controller
-    {
-        public int Id { get; set; }
-        public List<string> Cards { get; set; }
-
-        public void VerifyCards() 
-        {
-            Console.WriteLine($"Controller {Id} is Connecting ...");
-            using (var client = new TcpClient())
-            {
-                try
-                {
-                    client.Connect("192.168.1.198", 8877);
-                    Console.WriteLine($"Controller {Id} Connected");
-                    foreach (var card in Cards)
-                    {
-                        // Get a client stream for reading and writing.
-                        NetworkStream stream = client.GetStream();
-                        byte[] outputBuffer = card.Select(c => (byte)(c - '0')).ToArray();
-                        // Send the message to the connected TcpServer.
-                        stream.Write(outputBuffer, 0, outputBuffer.Length);
-                        stream.Flush();
-
-                        Console.WriteLine("Controller {0} Sent: {1}", Id, string.Join(string.Empty, outputBuffer.Select(b => b.ToString())));
-
-                        // Buffer to store the response bytes.
-                        byte[] inputBuffer = new byte[32];
-                        List<byte> receivedBytes = new List<byte>();
-                        int numberOfBytesRead = 0;
-                        do
-                        {
-                            if (stream.CanRead)
-                                numberOfBytesRead = stream.Read(inputBuffer, 0, inputBuffer.Length);
-                            else
-                                break;
-
-                            receivedBytes.AddRange(inputBuffer.Take(numberOfBytesRead));
-                        }
-                        while (stream.DataAvailable);
-
-                        Console.WriteLine("Controller {0} Received: {1}", Id, string.Join(string.Empty, receivedBytes.Select(b => b.ToString())));
-
-                        //stream.Close();// !!!
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-            }
-
-            Console.WriteLine($"Controller {Id} disconnected");
-        }
     }
 }
 
-    /*TcpClient client = new TcpClient();
 
-            try
-            {
-                Console.WriteLine("Try to connect");
-                client.Connect("192.168.1.198", 8877);
 
-                while (true)
-                {
-                    // Get a client stream for reading and writing.
-                    // Stream stream = client.GetStream();
-                    NetworkStream stream = client.GetStream();
 
-                    byte[] outputBuffer = new byte[10] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+/*
+ 
 
-                    // Send the message to the connected TcpServer.
-                    stream.Write(outputBuffer, 0, outputBuffer.Length);
-                    stream.Flush();
+//Console.WriteLine("Controller {0} Sent: {1}", Id, string.Join(string.Empty, outputBuffer.Select(b => b.ToString())));
 
-                    Console.WriteLine("Sent: {0}", string.Join(string.Empty, outputBuffer.Select(b => b.ToString())));
+// convert ascii char to byte: '5' - '0' => 0x35 - 0x30 = 0x5
+//sendBytes.AddRange(Concentrator.Select(c => (byte)(c - '0')));
 
-                    // Receive the TcpServer.response.
-                    // Buffer to store the response bytes.
-                    byte[] inputBuffer = new byte[10];//
-                    // Read the first batch of the TcpServer response bytes.
-                    int numberOfBytesRead = stream.Read(inputBuffer, 0, inputBuffer.Length);
 
-                    Console.WriteLine("Received: {0}", string.Join(string.Empty, inputBuffer.Select(b => b.ToString())));
-                    
-                    string ln = Console.ReadLine();
-                    
-                    if (ln.Contains("exit"))
-                    {
-                        stream.Close();
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+//Console.WriteLine("Controller {0} Received: {1}", 
+                        //    Id, 
+                        //    new string(
+                        //        receivedBytes
+                        //            .Select(b => b != 0x0A ? (char)(b + (byte)0x30) : (char)b) // convert byte to ascii char except '\n' 
+                        //            .ToArray()));
 
-            client.Close();
-        }*/
+                        //Console.WriteLine("Controller {0} Received: {1}", Id, string.Join(string.Empty, receivedBytes.Select(b => b.ToString())));
+ */

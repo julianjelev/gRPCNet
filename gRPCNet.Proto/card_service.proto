@@ -1,0 +1,79 @@
+﻿//1. Syntax
+syntax = "proto3";
+
+//2. Package
+package grpcnet.proto;
+
+//3. Imports (sorted)
+import "google/protobuf/timestamp.proto";
+
+//4. File options
+option csharp_namespace = "gRPCNet.Proto";
+
+//Use CamelCase (with an initial capital) for both the service name and any RPC method names
+service CardService {
+	rpc CanPlay(CanPlayRequest) returns(CanPlayResponse);
+	rpc ServicePrice(ServicePriceRequest) returns(ServicePriceResponse);
+}
+
+//Use CamelCase (with an initial capital) for message names
+//Use underscore_separated_names for field names (including oneof field and extension names) 
+
+message CanPlayRequest {
+	google.protobuf.Timestamp time = 1;
+	int32 transaction_id = 2;
+	string concentrator_id = 3;
+	string controller_id = 4;
+	int32 card_type = 5;
+	string card_id = 6;
+	bool should_pay = 7;
+	int32 endpoint_rssi = 8;
+	int32 concentrator_rssi = 9;
+}
+
+message CanPlayResponse {
+	google.protobuf.Timestamp time = 1;
+	int32 response_code = 2;
+	int32 transaction_id = 3;
+	string concentrator_id = 4;
+	string controller_id = 5;
+	int32 card_type = 6;
+	string card_id = 7;	
+	string card_number = 8;
+	string service_id = 9;
+	string service_name = 10;
+	bool permission = 11;
+	optional string relay_type = 12;
+	optional int32 relay_pulse = 13;
+	optional int32 relay_on_time = 14;
+	optional int32 relay_off_time = 15;
+	optional int32 relay_display_time = 16;
+	optional string display_line1 = 17;
+	optional string display_line2 = 18;
+}
+
+message ServicePriceRequest {
+	google.protobuf.Timestamp time = 1;
+	int32 transaction_id = 2;
+	string concentrator_id = 3;
+	string controller_id = 4;
+	int32 card_type = 5;
+	string card_id = 6;
+	string service_id = 7;
+	int32 endpoint_rssi = 8;
+	int32 concentrator_rssi = 9;
+}
+
+message ServicePriceResponse {
+	google.protobuf.Timestamp time = 1;
+	int32 response_code = 2;
+	int32 transaction_id = 3;
+	string concentrator_id = 4;
+	string controller_id = 5;
+	int32 card_type = 6;
+	string card_id = 7;
+	string card_number = 8;
+	string service_id = 9;
+	string service_name = 10;
+	double price = 11;
+}

@@ -26,11 +26,15 @@ namespace gRPCNet.Client
             _fileLogger = fileLogger;
 
             var token = GetTokenAsync().Result;
+            if (string.IsNullOrEmpty(token)) 
+            {
+                Channel = null;
+                return;
+            }
 
             var callCredentials = CallCredentials.FromInterceptor((context, metadata) =>
             {
-                if (!string.IsNullOrEmpty(token))
-                    metadata.Add("Authorization", $"Bearer {token}");
+                metadata.Add("Authorization", $"Bearer {token}");
                 return Task.CompletedTask;
             });
 

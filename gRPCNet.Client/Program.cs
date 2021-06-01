@@ -1,4 +1,5 @@
 ﻿using gRPCNet.Client.Services;
+using gRPCNet.Modbus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,43 +29,48 @@ namespace gRPCNet.Client
             
             var host = Host.CreateDefaultBuilder()
                 .UseContentRoot(pathToContentRoot)
+                .UseEnvironment(isService ? Environments.Production : Environments.Development)
+                .UseSystemd() // for linux systemd
                 .ConfigureAppConfiguration(config => 
                 {
                     config.SetBasePath(pathToContentRoot)
                         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                         .AddJsonFile("certificate.json", optional: true, reloadOnChange: true);
                 })
-                .ConfigureHostConfiguration(config => { })
                 .ConfigureServices((hostContext, services) => 
                 {
-                    services.AddLogging(logging =>
-                    {
-                        logging.AddConfiguration(hostContext.Configuration.GetSection("Logging"));
-                    })
-                    .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Information);
+                    services
+                    .AddLogging(logging => logging.AddConfiguration(hostContext.Configuration.GetSection("Logging")))
+                    .Configure<LoggerFilterOptions>(options => options.MinLevel = LogLevel.Information)
+                    .Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(30));
 
                     // register FileLogger service
                     services.AddTransient<IFileLogger>(s => new FileLogger(hostContext.Configuration, pathToContentRoot));
 
                     // register application services
-                    services.AddTransient<ISocketMessageService, SocketMessageService>();
+                    //services.AddTransient<IModbusSlaveDevice, ModbusSlaveDevice>();
+                    //services.AddTransient<IModbusMessageService, ModbusMessageService>();
+                    services.AddTransient<ITextMessageService, TextMessageService>();
                     services.AddSingleton<GrpcChannelService>();
 
                     services.AddHostedService<TcpHostedService>();
                     services.AddHostedService<KeepaliveHostedService>();
+                });
 
-                    services.Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(15));
-                })
-                .UseEnvironment(isService ? Environments.Production : Environments.Development);
-
-            if (isService)
-            {
-                await host.RunAsServiceAsync();
-            }
-            else
-            {
-                await host.RunConsoleAsync();
-            }
+            //if (isService)
+            //{
+            //    await host.RunAsServiceAsync();
+            //}
+            //else
+            //{
+                //await host.RunConsoleAsync();
+                await host
+                    .UseConsoleLifetime(options =>
+                    {
+                        options.SuppressStatusMessages = false;
+                    })
+                    .RunConsoleAsync();
+            //}
         }
     }
 }

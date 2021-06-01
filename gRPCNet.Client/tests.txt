@@ -1,0 +1,17 @@
+concentratorId:	"\u0001\0\u0001\0"						11
+controllerId:	"\u0001\0\u0001\0\u0001\0\u0001\0"				1111
+cardType:	"\u0001\0"							1
+cardId:		"\u0001\0\u0001\0\u0001\0\u0001\0\u0001\0\u0001\0\u0001\0��"	1111111
+endpointRssi:	255
+concentratorRssi:255
+
+
+
+http://testgame.icardmanager.eu/api/Concentrator/v2/21/game_controllers/0101003E/game_request?card_type=1&card_id=49C1365D&transaction_id=18&endpoint_rssi=130&concentrator_rssi=0
+
+concentratorId	4r	"21"		0021			48 48 50 49
+controllerId	8r	"0101003E"	0101003E		48 49 48 49 48 48 51 69
+cardType	2r	"1"		01			48 49
+cardId		16r	"49C1365D"	0000000049C1365D	48 48 48 48 48 48 48 48 52 57 67 49 51 54 53 68
+			"79TPPID09KL"	0000079TPPID09KL
+Rssi(H,L)	1r	130, 10		((130 << 8) + 10)	33290	

@@ -1,0 +1,20 @@
+
+[Clients]
+CardSystem.Modbus.Service(gRPCNet.Client)			// .Net Hosted service on Raspberry PI, akt as modbus slave device and client for gRPC.APIGateway
+CardSystem.BACnet.Service							// .Net Hosted service on Raspberry PI, akt as BACNet server and client for gRPC.APIGateway
+CardSystem.Web.Admin								// ASP.Net host on docker, akt as web site and client for REST.APIGateway
+CardSystem.Web.Statistic							// ASP.Net host on docker, akt as web site and client for REST.APIGateway
+
+[Gateways(Agregators)]
+CardSystem.gRPC.APIGateway(gRPCNet.ServerAPI)		// ASP.Net host on docker, akt as gRPC API Gateway for gRPC.Microservices
+CardSystem.REST.APIGateway							// ASP.Net host on docker, akt as REST API Gateway for gRPC.Microservices
+
+[Shared Libraries]
+CardSystem.gRPC.ProtoLib							// protobuf library for all gRPC
+
+[Microservices(gRPC servers)]
+CardSystem.gRPC.Microservice.GameMachine
+CardSystem.gRPC.Microservice.CashRegister
+CardSystem.gRPC.Microservice.Hardware
+CardSystem.gRPC.Microservice.TicketMachine
+CardSystem.gRPC.Microservice.Transactions

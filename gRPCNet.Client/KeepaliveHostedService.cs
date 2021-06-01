@@ -29,14 +29,84 @@ namespace gRPCNet.Client
             _appLifetime = appLifetime;
             _logger = logger;
             _fileLogger = fileLogger;
-            _keepaliveService = _chanelService.Channel.CreateGrpcService<Proto.IKeepaliveService>();
+            _keepaliveService = _chanelService.Channel != null ? 
+                _chanelService.Channel.CreateGrpcService<Proto.IKeepaliveService>() : null;
         }
 
         /// <summary>
         /// [implementation of IHostedService] Triggered when the application host is ready to start the service.
+        /// StartAsync contains the logic to start the background task. StartAsync is called:
+        /// - BEFORE The app's request processing pipeline is configured (Startup.Configure).
+        /// - BEFORE The server is started and IApplicationLifetime.ApplicationStarted is triggered.
         /// </summary>
         /// <param name="cancellationToken">Indicates that the start process has been aborted</param>
         /// <returns>Task</returns>
+        public Task StartAsync(CancellationToken token)
+        {
+            if (_keepaliveService != null) 
+            {
+                // Perform post - startup activities here
+                Task.Run(async () =>
+                {
+                    _logger.LogInformation("KeepaliveHostedService STARTED");
+                    _fileLogger.WriteProgramLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService STARTED");
+                    try
+                    {
+                        var cc = new CallContext(new CallOptions(cancellationToken: _appLifetime.ApplicationStopping));
+                        await foreach (var tic in _keepaliveService.SubscribeAsync(cc))
+                        {
+                            _logger.LogInformation($"{tic.Time} server respond for client {tic.Client}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"KeepaliveHostedService->OnStarted->Exception: {ex}");
+                        _fileLogger.WriteErrorLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService->OnStarted->Exception: {ex}");
+                        if (_chanelService.Channel != null) _chanelService.Channel.Dispose();
+                    }
+                }, _appLifetime.ApplicationStopping);
+            }
+            
+            return Task.CompletedTask;
+        }
+        /// <summary>
+        /// [implementation of IHostedService]
+        /// Triggered when the host is performing a graceful shutdown. 
+        /// StopAsync contains the logic to end the background task. 
+        /// Implement IDisposable and finalizers (destructors) to dispose of any unmanaged resources.
+        /// </summary>
+        /// <param name="cancellationToken">Indicates that the shutdown process should no longer be graceful.</param>
+        /// <returns>Task</returns>
+        public Task StopAsync(CancellationToken token)
+        {
+            if (_keepaliveService != null) 
+            {
+                try
+                {
+                    if (_chanelService.Channel != null) _chanelService.Channel.ShutdownAsync().Wait(token);
+                    _logger.LogInformation("KeepaliveHostedService STOPPED");
+                    _fileLogger.WriteProgramLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService STOPPED");
+                }
+                catch (Exception e)
+                {
+                    if (e is ObjectDisposedException || e is AggregateException)
+                    {
+                        _logger.LogError($"ERROR KeepaliveHostedService->StopAsync->Exception: {e}");
+                        _fileLogger.WriteErrorLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} ERROR KeepaliveHostedService->StopAsync->Exception: {e}");
+                    }
+                }
+            }
+            
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            if (_chanelService.Channel != null) _chanelService.Channel.Dispose();
+        }
+
+        /*
+         * 
         public Task StartAsync(CancellationToken token)
         {
             _appLifetime.ApplicationStarted.Register(OnStarted, true);
@@ -45,22 +115,7 @@ namespace gRPCNet.Client
 
             return Task.CompletedTask;
         }
-        /// <summary>
-        /// [implementation of IHostedService] Triggered when the application host is performing a graceful shutdown.
-        /// </summary>
-        /// <param name="cancellationToken">Indicates that the shutdown process should no longer be graceful.</param>
-        /// <returns>Task</returns>
-        public Task StopAsync(CancellationToken token)
-        {
-            return Task.CompletedTask;
-        }
 
-        public void Dispose()
-        {
-            _chanelService.Channel.Dispose();
-        }
-
-        //
         private void OnStarted() 
         {
             // Perform post - startup activities here
@@ -116,5 +171,6 @@ namespace gRPCNet.Client
                 _fileLogger.WriteProgramLog($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} KeepaliveHostedService STOPED");
             });
         }
+        */
     }
 }

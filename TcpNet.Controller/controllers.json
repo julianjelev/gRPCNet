@@ -1,14 +1,87 @@
 [
   {
-    "Id": 1,
-    "Cards": [ "1010020197467", "1010000383866", "1010010023868", "1010020202444", "1010010462902" ]
+    "ConcentratorId": 31,
+    "GameControllerId": "01030101",
+    "Cards": [
+      {
+        "CardType": "20",
+        "CardId": "1010020197467"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010000383866"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010010023868"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010020202444"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010010462902"
+      }
+    ],
+    "EndpointRssi": 125,
+    "ConcentratorRssi":  193
   },
   {
-    "Id": 2,
-    "Cards": [ "1010020211637", "1010010436095", "1010000220000", "1010020222930", "1010020051219" ]
+    "ConcentratorId": 32,
+    "GameControllerId": "0103000e",
+    "Cards": [
+      {
+        "CardType": "20",
+        "CardId": "1010020211637"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010010436095"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010000220000"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010020222930"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010020051219"
+      }
+    ],
+    "EndpointRssi": 185,
+    "ConcentratorRssi": 203
   },
   {
-    "Id": 3,
-    "Cards": [ "1010000397399", "1010000452265", "1010010050451", "1010000118833", "1010000343655" ]
+    "ConcentratorId": 42,
+    "GameControllerId": "0103002a",
+    "Cards": [
+      {
+        "CardType": "20",
+        "CardId": "1010000397399"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010000452265"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010010050451"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010000118833"
+      },
+      {
+        "CardType": "20",
+        "CardId": "1010000343655"
+      }
+    ],
+    "EndpointRssi": 225,
+    "ConcentratorRssi": 156
   }
 ]
+// 1010020197467 => 0x31 0x30 0x31 0x30 0x30 0x32 0x30 0x31 0x39 0x37 0x34 0x36 0x37 (bytes count = 13) 

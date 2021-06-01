@@ -93,6 +93,8 @@ namespace gRPCNet.ServerAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<KeepaliveService>();
+                endpoints.MapGrpcService<CardService>();
+
                 endpoints.MapPost("/oauth/token", async context => 
                 {
                     if (!context.Request.Headers.ContainsKey("Authorization")) 

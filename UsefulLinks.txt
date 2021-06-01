@@ -18,3 +18,58 @@ https://protogen.marcgravell.com/
 
 gRPC Server Reflection in the .NET world
 https://martinbjorkstrom.com/posts/2020-07-08-grpc-reflection-in-net
+
+
+
+
+
+// For modbus and arduino:
+Arduino Modbus Library (based on stephane/libmodbus)
+https://www.arduino.cc/en/ArduinoModbus/ArduinoModbus
+
+arduino-libraries/ArduinoModbus/examples
+https://github.com/arduino-libraries/ArduinoModbus/tree/master/examples
+
+Modbus 101 - Introduction to Modbus
+https://www.csimn.com/CSI_pages/Modbus101.html
+
+stephane/libmodbus
+https://github.com/stephane/libmodbus
+
+//for Arduino - RFID/NFC
+https://arduinogetstarted.com/tutorials/arduino-rfid-nfc
+https://arduinogetstarted.com/tutorials/arduino-rfid-nfc-relay
+//for Arduino - LCD
+https://arduinogetstarted.com/tutorials/arduino-lcd
+https://wiki.dfrobot.com/LCD_KeyPad_Shield_For_Arduino_SKU__DFR0009
+https://wiki.dfrobot.com/Arduino_LCD_KeyPad_Shield__SKU__DFR0009_
+
+//For Raspbery Pi 4, Ubuntu and .Net Core
+Raspberry Pi 4,
+https://erelement.com/raspberry-pi-4-4gb
+Raspberry Pi Documentation
+https://www.raspberrypi.org/documentation/
+
+How to install Ubuntu Server on your Raspberry Pi
+https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview
+https://linuxconfig.org/ubuntu-20-04-system-requirements
+
+Install the .NET SDK or the .NET Runtime on Ubuntu
+https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu
+https://linuxhint.com/install_dot_net_core_ubuntu/
+https://tecadmin.net/how-to-install-net-core-on-ubuntu-20-04/
+Download .NET Core 3.1
+https://dotnet.microsoft.com/download/dotnet-core/3.1
+How to install .net core ARM64 SDK in Raspberry Pi 4
+https://sumodh.com/2020/05/05/how-to-install-net-core-x64-sdk-in-raspberry-pi-4/
+
+How to run ASP.NET Core Web Application as a service on Linux without reverse proxy, no NGINX or Apache
+https://swimburger.net/blog/dotnet/how-to-run-aspnet-core-as-a-service-on-linux
+
+Getting started with cross-platform development using .NET on Ubuntu on WSL
+https://ubuntu.com/blog/creating-cross-platform-applications-with-net-on-ubuntu-on-wsl
+
+Build a Simple Raspberry Pi LED Power/Status Indicator
+https://howchoo.com/g/ytzjyzy4m2e/build-a-simple-raspberry-pi-led-power-status-indicator
+How to Add a Power Button to Your Raspberry Pi
+https://howchoo.com/g/mwnlytk3zmm/how-to-add-a-power-button-to-your-raspberry-pi

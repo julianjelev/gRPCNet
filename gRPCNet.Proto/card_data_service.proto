@@ -1,0 +1,89 @@
+﻿//1. Syntax
+syntax = "proto3";
+
+//2. Package
+package grpcnet.proto;
+
+//3. Imports (sorted)
+import "google/protobuf/timestamp.proto";
+
+//4. File options
+option csharp_namespace = "gRPCNet.Proto";
+
+//Use CamelCase (with an initial capital) for both the service name and any RPC method names
+service CardDataService {
+	rpc ByInternalId(string) returns(CardData);
+	rpc ById(string, string) returns(CardData);
+	rpc ByNumber(string) returns(CardData);
+}
+
+//Use CamelCase (with an initial capital) for message names
+//Use underscore_separated_names for field names (including oneof field and extension names)
+message CardData {
+	string id = 1;
+	string internal_id = 2;
+	string number = 3;
+	string serie = 4;
+	bool is_active = 5;
+	bool is_deleted = 6;
+	google.protobuf.Timestamp activated_on = 7;
+	google.protobuf.Timestamp expiration_date = 8;
+	int32 days_to_live = 9;
+	string user_id = 10;
+	string owner_id = 11;
+	string card_state_id = 12;
+	string card_mode_id = 13;
+	int32 min_transaction_time = 14;
+	google.protobuf.Timestamp last_transaction_time = 15;
+	google.protobuf.Timestamp created_on = 16;
+	string created_by = 17;
+	google.protobuf.Timestamp modified_on = 18;
+	string modified_by = 19;
+	string annulled_info = 20;
+	bool free_period = 21;
+	google.protobuf.Timestamp free_period_start = 22;
+	google.protobuf.Timestamp free_period_end = 23;
+	bool is_card_updated_to_latest_changes = 24;
+	int32 state = 25;
+	string state_name = 26;
+	int32 mode = 27;
+	string mode_name = 28;
+	int type = 29;
+	string type_name = 30;
+	string currency_primary_code = 31;
+	string currency_primary_name = 32;
+	double currency_primary_balance = 33;
+	double currency_primary_balance_bonus = 34;
+	double currency_primary_total_income = 35;
+	double currency_primary_total_spend = 36;
+	string currency_credit_code = 37;
+	string currency_credit_name = 38;
+	double currency_credit_balance = 39;
+	double currency_credit_balance_bonus = 40;
+	double currency_credit_total_income = 41;
+	double currency_credit_total_spend = 42;
+	string currency_ticket_code = 43;
+	string currency_ticket_name = 44;
+	double currency_ticket_balance = 45;
+	double currency_ticket_balance_bonus = 46;
+	double currency_ticket_total_income = 47;
+	double currency_ticket_total_spend = 48;
+	string currency_bonus_code = 49;
+	string currency_bonus_name = 50;
+	double currency_bonus_balance = 51;
+	double currency_bonus_balance_bonus = 52;
+	double currency_bonus_total_income = 53;
+	double currency_bonus_total_spend = 54;
+	string currency1_code = 55;
+	string currency1_name = 56;
+	double currency1_balance = 57;
+	double currency1_balance_bonus = 58;
+	double currency1_total_income = 59;
+	double currency1_total_spend = 60;
+	string currency_time_code = 61;
+	string currency_time_name = 62;
+	double currency_time_balance = 63;
+	double currency_time_balance_bonus = 64;
+	double currency_time_total_income = 65;
+	double currency_time_total_spend = 66;
+}
