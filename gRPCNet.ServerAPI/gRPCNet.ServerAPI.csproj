@@ -18,10 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="3.1.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.16" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.16" />
     <PackageReference Include="protobuf-net.Grpc.AspNetCore" Version="1.0.136" />
     <PackageReference Include="protobuf-net.Grpc.AspNetCore.Reflection" Version="1.0.136" />
+    <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="3.1.41" />
   </ItemGroup>
 
   <ItemGroup>
