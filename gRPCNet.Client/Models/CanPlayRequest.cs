@@ -20,6 +20,23 @@ namespace gRPCNet.Client.Models
 
         public int ConcentratorRssi { get; set; }
 
+        public Proto.CanPlayRequest ToProtoCanPlayRequest() 
+        {
+            int.TryParse(CardType, out int cardType);
+            return new Proto.CanPlayRequest 
+            {
+                Time = System.DateTime.UtcNow,
+                ConcentratorId = ConcentratorId,
+                ControllerId = GameControllerId,
+                CardType = cardType,
+                CardId = CardId,
+                ShouldPay = ShoulPay,
+                TransactionId = TransactionId,
+                EndpointRssi = EndpointRssi,
+                ConcentratorRssi = ConcentratorRssi
+            };
+        }
+
         public static CanPlayRequest DeserializeASCII(byte[][] buffer) 
         {
             // how many tokens

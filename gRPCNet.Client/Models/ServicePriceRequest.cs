@@ -25,7 +25,7 @@ namespace gRPCNet.Client.Models
             int.TryParse(CardType, out int cardType);
             return new Proto.ServicePriceRequest
             {
-                Time = System.DateTime.Now,
+                Time = System.DateTime.UtcNow,
                 ConcentratorId = ConcentratorId,
                 ControllerId = GameControllerId,
                 CardType = cardType,

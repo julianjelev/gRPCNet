@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProtoBuf.Grpc.Server;
 using System;
@@ -15,6 +16,10 @@ using System.Net;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
+using gRPCNet.ServerAPI.DAL;
+using gRPCNet.ServerAPI.DAL.Repositories;
+using gRPCNet.ServerAPI.BusinessServices;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace gRPCNet.ServerAPI
 {
@@ -39,6 +44,11 @@ namespace gRPCNet.ServerAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<CardSystemDbContext>(options =>
+                options.UseSqlServer(_configuration.GetConnectionString("PlayGroundCardSystemConnection")));
+            services.AddDbContext<TransactionLogDbContext>(options =>
+                options.UseSqlServer(_configuration.GetConnectionString("PlayGroundTransactionLogConnection")));
+
             services.AddCodeFirstGrpc(options => 
             {
                 //Configure services options (https://docs.microsoft.com/en-us/aspnet/core/grpc/configuration?view=aspnetcore-3.1)
@@ -75,6 +85,23 @@ namespace gRPCNet.ServerAPI
                 };
             });
             services.AddAuthorization();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddScoped(typeof(ICardSystemRepository<>), typeof(CardSystemRepository<>));
+            services.AddScoped(typeof(ITransactionLogRepository<>), typeof(TransactionLogRepository<>));
+            services.AddScoped<ICanPlayService, CanPlayService>();
+            services.AddScoped<CommonServices.Utils.ILogger, CommonServices.Utils.Logger>();
+            services.AddSingleton<IMemoryCache, MemoryCache>();
+            services.AddMemoryCache();
+            services.AddHttpClient<CommonServices.RestApi.IRestApiClient, CommonServices.RestApi.RestApiClient>(client => 
+            {
+                // !IMPORTANT do not set BaseAddress
+                client.DefaultRequestHeaders.Add("User-Agent", "CardSystemRestApiClient");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.Timeout = TimeSpan.FromSeconds(30);//default 100
+                // TODO aditional headers and options
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -142,6 +169,29 @@ namespace gRPCNet.ServerAPI
                 });
                 //endpoints.MapCodeFirstGrpcReflectionService();
             });
+
+            if (_configuration.GetSection("AppSettings:ENABLE_CACHE_SERVICES").Get<bool>())
+            {
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    IServiceProvider serviceProvider = serviceScope.ServiceProvider.GetService<IServiceProvider>();
+
+                    CardCacheServiceV2.Instance.Init(
+                        serviceProvider,
+                        _configuration.GetSection("AppSettings:CARD_CACHE_TIMEOUT_SECONDS").Get<int>(),
+                        _configuration.GetSection("AppSettings:CARD_CACHE_SLIDING_EXPIRATION").Get<bool>());
+
+                    CanPlayCacheService.Instance.Init(
+                        serviceProvider,
+                        _configuration.GetSection("AppSettings:CANPLAY_CACHE_TIMEOUT_SECONDS").Get<int>(),
+                        _configuration.GetSection("AppSettings:CANPLAY_CACHE_SLIDING_EXPIRATION").Get<bool>());
+
+                    ServicePriceCacheService.Instance.Init(
+                        serviceProvider,
+                        _configuration.GetSection("AppSettings:SERVICEPRICE_CACHE_TIMEOUT_SECONDS").Get<int>(),
+                        _configuration.GetSection("AppSettings:SERVICEPRICE_CACHE_SLIDING_EXPIRATION").Get<bool>());
+                }
+            }
         }
 
         private bool Authenticate(string clientId, string clientSecret) 

@@ -28,7 +28,7 @@ namespace gRPCNet.Client.Services
             _chanelService = chanelService;
             _logger = logger;
             _cardService = _chanelService.Channel != null ? 
-            _chanelService.Channel.CreateGrpcService<Proto.ICardService>() : null;
+                _chanelService.Channel.CreateGrpcService<Proto.ICardService>() : null;
         }
 
         public void StartProcessing() 
@@ -55,30 +55,52 @@ namespace gRPCNet.Client.Services
 
             if (cmd.Equals("RG", StringComparison.InvariantCultureIgnoreCase))
             {
-                var request = CanPlayRequest.DeserializeASCII(splittedMessage);
-
-                // to do ... 
+                CanPlayRequest request = CanPlayRequest.DeserializeASCII(splittedMessage);
                 _logger.LogInformation(System.Text.Json.JsonSerializer.Serialize(request));
-                //work 
-                Thread.Sleep(1000);
-                //end work
-
-                var response = new CanPlaySuccessResponse() 
+                Proto.CanPlayRequest proto_request = request.ToProtoCanPlayRequest();
+                CanPlayResponse response;
+                try
                 {
-                    ConcentratorId = request.ConcentratorId,
-                    GameControllerId = request.GameControllerId,
-                    CardId = request.CardId,
-                    TransactionId = request.TransactionId,
-                    GameId = "",
-                    Permission = true,
-                    RelayType = "",
-                    RelayPulse = 5,
-                    RelayOnTime = 10,
-                    RelayOffTime = 10,
-                    RelayDisplayTime = 30,
-                    MessageLine1 = "Price",
-                    MessageLine2 = "Credit"
-                };
+                    Proto.CanPlayResponse proto_response = _cardService.CanPlayAsync(proto_request).Result;
+                    if (proto_response != null)
+                        response = CanPlayResponse.FromProtoCanPlayResponse(proto_response);
+                    else
+                    {
+                        response = new CanPlayResponse { Success = false, MessageLine1 = "Err 109", MessageLine2 = "Internal server" };
+                        _logger.LogError("TextMessageService.ProccessRequest => Proto.CanPlayResponse is null");
+                    }
+                }
+                catch (Exception ex) 
+                {
+                    response = new CanPlayResponse { Success = false, MessageLine1 = "Err 109", MessageLine2 = "Internal server" };
+                    _logger.LogError($"TextMessageService.ProccessRequest throws: {ex}");
+                }
+                _logger.LogInformation(System.Text.Json.JsonSerializer.Serialize(response));
+                return response.SerializeASCII();
+            }
+            else if (cmd.Equals("RP", StringComparison.InvariantCultureIgnoreCase))
+            {
+                ServicePriceRequest request = ServicePriceRequest.DeserializeASCII(splittedMessage);
+                _logger.LogInformation(System.Text.Json.JsonSerializer.Serialize(request));
+                Proto.ServicePriceRequest proto_request = request.ToProtoServicePriceRequest();
+                ServicePriceResponse response;
+                try
+                {
+                    Proto.ServicePriceResponse proto_response = _cardService.ServicePriceAsync(proto_request).Result;
+                    if (proto_response != null) 
+                        response = ServicePriceResponse.FromProtoServicePriceResponse(proto_response);
+                    else
+                    {
+                        response = new ServicePriceResponse { Success = false, MessageLine1 = "Err 109", MessageLine2 = "Internal server" };
+                        _logger.LogError("TextMessageService.ProccessRequest => Proto.ServicePriceRequest is null");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response = new ServicePriceResponse { Success = false, MessageLine1 = "Err 109", MessageLine2 = "Internal server" };
+                    _logger.LogError($"TextMessageService.ProccessRequest throws: {ex}");
+                }
+                _logger.LogInformation(System.Text.Json.JsonSerializer.Serialize(response));
                 return response.SerializeASCII();
             }
             else if (cmd.Equals("T", StringComparison.InvariantCultureIgnoreCase))
