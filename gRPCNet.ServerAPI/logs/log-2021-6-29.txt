@@ -1,0 +1,21 @@
+﻿[INFO] [6/29/2021 4:51:45 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:46 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:46 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:47 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:47 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:48 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:49 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:50 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:50 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:51 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:52 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:53 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:54 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:54 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:55 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:56 PM] [] Successfully load into card dictionaries mapping cache 40000 cards
+[INFO] [6/29/2021 4:51:57 PM] [] Successfully load into card dictionaries mapping cache 29100 cards
+[INFO] [6/29/2021 4:52:20 PM] [192.168.1.198] [CardService.CanPlayAsync][-IN-] [d8dc082c-6234-483d-a88d-fd54e1101075] TransactionId 6 | ConcentratorId 98 | ControllerId 424242a | CardType 20 | CardId 2491234677225 | ShouldPay False | EndpointRssi: 255 | ConcentratorRssi 255
+[INFO] [6/29/2021 4:52:20 PM] [192.168.1.198] [CardService.CanPlayAsyncInternal][-OUT-] [d8dc082c-6234-483d-a88d-fd54e1101075] TransactionId 6 | ConcentratorId 98 | ControllerId 424242a | CardType 20 | CardId 2491234677225 | ShouldPay False | EndpointRssi: 255 | ConcentratorRssi 255 | DB Result {"Time":"2021-06-29T13:52:20.7185343Z","ResponseCode":0,"TransactionId":6,"ConcentratorId":"98","ControllerId":"424242a","CardType":20,"CardId":"2491234677225","CardNumber":"010000500157","ServiceId":"22e2a1d3-5681-4f1e-9607-a57a8a86771c","ServiceName":"Ju Arduino Uno","Permission":true,"RelayType":"NORMAL","RelayPulse":1,"RelayOnTime":90,"RelayOffTime":600,"RelayDisplayTime":10,"DisplayLine1":"2.00","DisplayLine2":"60.00"}
+[INFO] [6/29/2021 4:52:20 PM] [192.168.1.198] [CardService.CanPlayAsync][-IN-] [97d0fcef-0589-44e7-8d9f-261cb5b8232a] TransactionId 6 | ConcentratorId 98 | ControllerId 424242a | CardType 20 | CardId 2491234677225 | ShouldPay True | EndpointRssi: 255 | ConcentratorRssi 255
+[INFO] [6/29/2021 4:52:21 PM] [192.168.1.198] [CardService.CanPlayAsyncInternal][-OUT-] [97d0fcef-0589-44e7-8d9f-261cb5b8232a] TransactionId 6 | ConcentratorId 98 | ControllerId 424242a | CardType 20 | CardId 2491234677225 | ShouldPay True | EndpointRssi: 255 | ConcentratorRssi 255 | DB Result {"Time":"2021-06-29T13:52:21.1107484Z","ResponseCode":0,"TransactionId":6,"ConcentratorId":"98","ControllerId":"424242a","CardType":20,"CardId":"2491234677225","CardNumber":"010000500157","ServiceId":"22e2a1d3-5681-4f1e-9607-a57a8a86771c","ServiceName":"Ju Arduino Uno","Permission":true,"RelayType":"NORMAL","RelayPulse":1,"RelayOnTime":90,"RelayOffTime":600,"RelayDisplayTime":10,"DisplayLine1":"2.00","DisplayLine2":"58.00"}

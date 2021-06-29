@@ -435,8 +435,8 @@ namespace gRPCNet.ServerAPI.gRPCServices
                     canPlayDto.GameId,
                     canPlayDto.GameName,
                     canPlayDto.CurrencyInfo,
-                    canPlayDto.CardId,
-                    canPlayDto.CardType,
+                    card.ExternalId,
+                    card.Type,
                     canPlayDto.PricePerGame,
                     canPlayDto.PaidFromBonusBalance,
                     canPlayDto.CanPlay,
@@ -665,7 +665,7 @@ namespace gRPCNet.ServerAPI.gRPCServices
             string gameName,
             string currencyInfo,
             string cardId,
-            string cardType,
+            int cardType,
             decimal pricePerGame,
             decimal paidFromBonusBalance,
             bool canPlay,
@@ -692,8 +692,9 @@ namespace gRPCNet.ServerAPI.gRPCServices
 
             TransactionLog log = new TransactionLog()
             {
+                CreatedOn = DateTime.UtcNow,
                 CardId = cardId,
-                CardType = cardType,
+                CardType = cardType.ToString(),
                 Service = "play game",
                 Amount = Math.Abs(pricePerGame) * -1,
                 SenderIP = GetIpAddress(),
