@@ -342,5 +342,5 @@ healthchecksdb
 # Custom
 exceptions/**
 logs/**
-.programlog.txt
-.errorlog.txt
+programlog.txt
+errorlog.txt
